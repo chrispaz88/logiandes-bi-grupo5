@@ -17,7 +17,7 @@ outputs/                # KPIs exportados por el Notebook (el dashboard los usa 
 ## Ejecución local
 
 ```bash
-git clone https://github.com/<usuario>/logiandes-bi-grupo5.git
+git clone https://github.com/chrispaz88/logiandes-bi-grupo5.git
 cd logiandes-bi-grupo5
 python3 -m venv env && source env/bin/activate          # Windows: env\Scripts\activate
 pip install -r requirements-notebook.txt                # app + Jupyter (solo la app: requirements.txt)
