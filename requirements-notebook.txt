@@ -1,4 +1,0 @@
--r requirements.txt
-jupyter
-nbconvert
-ipykernel

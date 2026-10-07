@@ -5,10 +5,10 @@ kpis_grupo5.py — Capa semántica de la solución BI de LogiAndes S.A. (Taller 
   * carga y preparación de los datos,
   * la ficha técnica y el cálculo de los 5 KPIs definidos por el grupo,
   * las tablas por mes, provincia y periodo,
-  * los gráficos Plotly que usan el Notebook y el dashboard de Streamlit.
+  * los gráficos Plotly del análisis y del dashboard de Streamlit.
 
-El Notebook y app.py importan estas funciones: un KPI mostrado en el dashboard
-proviene exactamente del mismo código con el que se calculó en el Notebook.
+El análisis y app.py importan estas mismas funciones: un KPI siempre se calcula
+con el mismo código, se muestre donde se muestre.
 """
 from __future__ import annotations
 

@@ -3,12 +3,8 @@ LogiAndes S.A. — Monitor de KPIs (Taller 2, Grupo 5). Prototipo de dashboard e
 
 Ejecutar:  streamlit run app.py
 
-Todos los KPIs, tablas y gráficos provienen de kpis_grupo5.py, el mismo módulo que usa
-el Notebook Taller_2_Grupo5.ipynb. Así lo que se ve aquí coincide con lo calculado allá.
+Todos los KPIs, tablas y gráficos provienen de kpis_grupo5.py, la capa semántica de la solución.
 """
-import json
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -17,7 +13,6 @@ import kpis_grupo5 as kg
 
 st.set_page_config(page_title="LogiAndes · Monitor de KPIs", page_icon="🚚", layout="wide")
 
-RUTA_REFERENCIA = Path(__file__).parent / "outputs" / "kpis_referencia.json"
 CONFIG = {"displaylogo": False, "modeBarButtonsToRemove": ["lasso2d", "select2d"]}
 
 st.markdown("""
@@ -303,35 +298,13 @@ with tab_gob:
 
     g1, g2 = st.columns(2, gap="large")
     with g1:
-        st.markdown("#### Verificación contra el Notebook")
-        if RUTA_REFERENCIA.exists():
-            ref = json.loads(RUTA_REFERENCIA.read_text(encoding="utf-8"))
-            actual = kg.tabla_mensual(df_total).set_index("mes")
-            filas = []
-            for k, por_mes in ref["kpis"].items():
-                for m, v in por_mes.items():
-                    if v is None:
-                        continue
-                    filas.append({"KPI": kg.KPIS[k]["codigo"], "Mes": m, "Notebook": v,
-                                  "Dashboard": round(float(actual.loc[m, k]), 6)})
-            ver = pd.DataFrame(filas)
-            ver["Coincide"] = (ver["Notebook"] - ver["Dashboard"]).abs() < 1e-3
-            st.dataframe(ver, hide_index=True, use_container_width=True, height=300)
-            if ver["Coincide"].all() and ref.get("ajuste_calendario") == kg.AJUSTE_CALENDARIO:
-                st.success(f"✔ Los {len(ver)} valores coinciden con el Notebook (generado {ref['generado']}, "
-                           f"{ref['registros']:,} registros). Comparación sin filtros.")
-            else:
-                st.error("✖ Hay diferencias con el Notebook: vuelva a ejecutarlo.")
-        else:
-            st.warning("No se encontró outputs/kpis_referencia.json. Ejecute el Notebook para generarlo.")
-    with g2:
         st.markdown("#### Calidad de datos")
         cal = kg.calidad_datos(df_total)
         cal["Cumple"] = cal["Cumple"].map({True: "✔", False: "✖"})
         st.dataframe(cal, hide_index=True, use_container_width=True)
-
-    st.markdown("#### Uso responsable")
-    st.markdown(f"""
+    with g2:
+        st.markdown("#### Uso responsable")
+        st.markdown(f"""
 - **Asociación no es causalidad:** las diferencias entre provincias señalan dónde investigar, no la causa.
 - **Muestras pequeñas:** con menos de {kg.N_MINIMO} pedidos se muestra una advertencia y las celdas se marcan con \\*. Los KPI 3 y 5 incluyen un margen de error (IC 95 %).
 - **Alertas confirmadas:** una señal se confirma si se repite el mes anterior o en el trimestre, para no reaccionar ante el azar.
